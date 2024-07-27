@@ -17,8 +17,8 @@ fun CheckoutScreen(modifier: Modifier = Modifier) {
 
     }
 
-//@Preview
-//@Composable
-//private fun CheckoutScreenPreview() {
-//    CheckoutScreen()
-//}
+@Preview
+@Composable
+private fun CheckoutScreenPreview() {
+    CheckoutScreen()
+}

@@ -29,10 +29,14 @@ class MainActivity : ComponentActivity() {
                     var navController =rememberNavController()
                     NavHost(navController = navController, startDestination = "Pizza selection" ){
                         composable("Pizza selection"){
-                            PizzaSelectionScreen(modifier = Modifier.padding(innerPadding))
+                            PizzaSelectionScreen(modifier = Modifier.padding(innerPadding)){
+                                navController.navigate("Topping selection")
+                            }
                         }
                         composable("Topping selection"){
-                            ToppingSelection(modifier = Modifier.padding(innerPadding))
+                            ToppingSelection(modifier = Modifier.padding(innerPadding)){
+                                navController.navigate("Checkout")
+                            }
                         }
                         composable("Checkout"){
                             CheckoutScreen(modifier = Modifier.padding(innerPadding))
@@ -58,4 +62,23 @@ fun GreetingPreview() {
     PizzaOrderingAppTheme {
         Greeting("Android")
     }
+}@Preview
+@Composable
+private fun ToppingSelectionPreview() {
+    ToppingSelection(){
+
+    }
+}
+
+@Preview
+@Composable
+private fun PizzaSelectionScreenPreview(){
+    PizzaSelectionScreen(){
+
+    }
+}
+@Preview
+@Composable
+private fun CheckoutScreenPreview() {
+    CheckoutScreen()
 }
