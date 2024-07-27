@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -47,7 +48,7 @@ fun ToppingSelection(modifier: Modifier = Modifier,
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Blue)
+            .background(MaterialTheme.colorScheme.onBackground)
     ) {
 
     LazyColumn(
@@ -55,12 +56,20 @@ fun ToppingSelection(modifier: Modifier = Modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier.fillMaxSize()
     ) {
-        items(dummyToppingList()) {
-            ToppingsItem(toppings = it)
+
+            items(dummyToppingList()) {
+                ToppingsItem(toppings = it)
+
         }
 
     }
-        FloatingActionButton(onClick = { onConfirm }) {
+        FloatingActionButton(onClick = { onConfirm },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            shape = MaterialTheme.shapes.extraLarge,
+            containerColor = MaterialTheme.colorScheme.secondary
+        ) {
             Icon(imageVector = Icons.Default.Done, contentDescription = "Done")
         }
 }
@@ -72,7 +81,7 @@ fun ToppingsItem(modifier: Modifier = Modifier,
     Card (
         modifier = Modifier
             .fillMaxWidth()
-            .padding(9.dp),
+            .padding(2.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.tertiary
         )
@@ -80,31 +89,39 @@ fun ToppingsItem(modifier: Modifier = Modifier,
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp)
-        ){
-            Column(
-                modifier
-                    .height(100.dp)
-                    .weight(1f)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                .padding(6.dp),
+            verticalAlignment = Alignment.CenterVertically,
 
-            ){
+        ){
+            Checkbox(checked = toppings.isChecked, onCheckedChange ={toppings.isChecked = it})
+//            Column(
+//                modifier
+//                    .height(100.dp)
+//                    .weight(1f)
+//                    .padding(16.dp),
+//                verticalArrangement = Arrangement.Center,
+//                horizontalAlignment = Alignment.CenterHorizontally
+
+//            )
+//            {
                 Text(
                     text = toppings.title,
                     style = MaterialTheme.typography.bodyLarge,
-                    fontSize = 30.sp,
+                    fontSize = 25.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.basicMarquee()
+                        .padding(10.dp)
                 )
+                Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = "$ ${toppings.price}",
+                    text = "Rs ${toppings.price}",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 25.sp,
-                    color = Color.Blue.copy(alpha = .6f)
+                    fontSize = 20.sp,
+                    color = Color.Blue.copy(alpha = .6f),
+                    modifier = Modifier.padding(10.dp)
+
                 )
-            }
+//            }
 
         }
 
@@ -121,11 +138,11 @@ private fun ToppingsItemPreview() {
     )
 
 }
-//
-//@Preview
-//@Composable
-//private fun ToppingSelectionPreview() {
-//    ToppingSelection(){
-//
-//    }
-//}
+
+@Preview
+@Composable
+private fun ToppingSelectionPreview() {
+    ToppingSelection(){
+
+    }
+}

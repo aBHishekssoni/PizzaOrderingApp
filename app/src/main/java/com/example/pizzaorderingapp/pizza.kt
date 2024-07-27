@@ -11,6 +11,7 @@ data class Pizza(
 data class Topping(
     val title: String,
     val price: Double,
+    var isChecked: Boolean = false,
 )
     fun dummyToppingList(): List<Topping> {
         return listOf(
@@ -28,9 +29,32 @@ data class Topping(
             Topping(
                 "Pepper",10.00,),
             Topping(
-                "Cheese",10.00),
-                Topping(
+                "Paneer",10.00),
+            Topping(
+                "Capcicum",10.00),
+            Topping(
+                "Olive",10.00),
+            Topping(
+                "Corn",10.00),
+            Topping(
+                "Extra Cheese",20.00),
+            Topping(
+                "Extra Onion",10.00),
+            Topping(
+                "Extra Mushroom",10.00),
+            Topping(
+                "Extra Tomato",10.00),
+            Topping(
+                "Extra Capcicum",10.00),
+            Topping(
+                "Extra Olive",10.00),
+            Topping(
+                "Extra Corn",10.00),
+            Topping(
+                "Extra Paneer",10.00),
+            Topping(
                 "Pepperoni",20.00)
+
         )
 
     }

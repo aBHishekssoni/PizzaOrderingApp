@@ -1,5 +1,6 @@
 package com.example.pizzaorderingapp.ui.screen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 //import androidx.compose.foundation.layout.ColumnScopeInstance.weight
 //import androidx.compose.foundation.layout.FlowRowScopeInstance.weight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,13 +21,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Card
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -41,20 +50,46 @@ import com.example.pizzaorderingapp.dummyPizzaList
 @Composable
 fun PizzaSelectionScreen(modifier: Modifier = Modifier,
 onConfirm: () -> Unit,) {
-
+var SelectedPizza by remember { mutableStateOf<Pizza?>(null) }
     Box(modifier = Modifier
         .fillMaxSize()
-        .background(Color.Blue)){
+        .background(MaterialTheme.colorScheme.tertiary)){
         LazyColumn(
             contentPadding = PaddingValues(8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.fillMaxSize()
         ) {
             items(dummyPizzaList()){
-                PizzaItem(pizza = it)
+                PizzaItem(pizza = it){
+                    SelectedPizza = it
+                }
             }
             }
-        FloatingActionButton(onClick = { onConfirm() }) {
+        AnimatedVisibility(SelectedPizza != null) {
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        MaterialTheme.colorScheme.secondaryContainer
+                    )
+                    .padding(16.dp),
+            ){
+                Text(text = "Selected Pizza: ${SelectedPizza?.name} ${SelectedPizza?.price}")
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(onClick = { SelectedPizza=null }) {
+                    Icon(imageVector = Icons.Default.Clear, contentDescription = "Close")
+                }
+
+            }
+        }
+
+        FloatingActionButton(onClick = { onConfirm() },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            shape = MaterialTheme.shapes.extraLarge,
+            containerColor = MaterialTheme.colorScheme.secondary
+        ) {
             Icon(
                 imageVector = Icons.Default.Done,
                 contentDescription = "Done"
@@ -69,12 +104,16 @@ onConfirm: () -> Unit,) {
 fun PizzaItem(
     modifier: Modifier = Modifier,
     pizza: Pizza,
+    onPizzaSelected: (Pizza) -> Unit = {}
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
+        onClick = { onPizzaSelected(pizza) }
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         ) {
             Image(
                 painter = painterResource(id = pizza.image),
@@ -97,7 +136,7 @@ fun PizzaItem(
                     modifier = Modifier.basicMarquee()
                 )
                 Text(
-                    text = "$ ${pizza.price}",
+                    text = "Rs ${pizza.price}",
                     fontWeight = FontWeight.Bold,
                     fontSize = 25.sp,
                     color = Color.Blue.copy(alpha = .6f)
@@ -132,4 +171,11 @@ private fun PizzaItemPreview() {
             PizzaType.VEG),
 
         )
+}
+@Preview
+@Composable
+private fun PizzaSelectionScreenPreview(){
+    PizzaSelectionScreen(){
+
+    }
 }
