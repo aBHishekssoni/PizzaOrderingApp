@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Done
@@ -31,6 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -49,8 +51,9 @@ import com.example.pizzaorderingapp.dummyPizzaList
 
 @Composable
 fun PizzaSelectionScreen(modifier: Modifier = Modifier,
-onConfirm: () -> Unit,) {
+onConfirm: (Int) -> Unit,) {
 var SelectedPizza by remember { mutableStateOf<Pizza?>(null) }
+    var selectedPizzaIndex by remember { mutableIntStateOf(-1) }
     Box(modifier = Modifier
         .fillMaxSize()
         .background(MaterialTheme.colorScheme.tertiary)){
@@ -59,9 +62,12 @@ var SelectedPizza by remember { mutableStateOf<Pizza?>(null) }
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.fillMaxSize()
         ) {
-            items(dummyPizzaList()){
-                PizzaItem(pizza = it){
+            itemsIndexed(dummyPizzaList()){idx,it->
+                PizzaItem(pizza = it){item->
                     SelectedPizza = it
+                    dummyPizzaList().indexOf(item).let { itemIdx ->
+                        selectedPizzaIndex = itemIdx
+                    }
                 }
             }
             }
@@ -83,7 +89,11 @@ var SelectedPizza by remember { mutableStateOf<Pizza?>(null) }
             }
         }
 
-        FloatingActionButton(onClick = { onConfirm() },
+        FloatingActionButton(onClick = {
+            if (selectedPizzaIndex != -1) {
+                onConfirm(selectedPizzaIndex)
+            }
+        },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),

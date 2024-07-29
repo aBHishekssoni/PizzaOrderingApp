@@ -7,13 +7,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.pizzaorderingapp.ui.screen.CheckoutScreen
 import com.example.pizzaorderingapp.ui.screen.PizzaSelectionScreen
 import com.example.pizzaorderingapp.ui.screen.ToppingSelection
@@ -30,12 +31,19 @@ class MainActivity : ComponentActivity() {
                     NavHost(navController = navController, startDestination = "Pizza selection" ){
                         composable("Pizza selection"){
                             PizzaSelectionScreen(modifier = Modifier.padding(innerPadding)){
-                                navController.navigate("Topping selection")
+
+                                navController.navigate("Topping selection/$it")
                             }
                         }
-                        composable("Topping selection"){
-                            ToppingSelection(modifier = Modifier.padding(innerPadding)){
-                                navController.navigate("Checkout")
+                        composable("Topping selection/{pizzaid}",
+                            arguments = listOf(navArgument("pizzaid"){
+                                type= NavType.IntType
+                            })
+                            ){
+                            ToppingSelection(modifier = Modifier.padding(innerPadding),
+                                pizzaid = it.arguments?.getInt("pizzaid")?:0
+                                ){
+//                                navController.navigate("Checkout")
                             }
                         }
                         composable("Checkout"){
@@ -51,9 +59,9 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 private fun ToppingSelectionPreview() {
-    ToppingSelection(){
+    ToppingSelection(onConfirm = {
 
-    }
+    }, pizzaid = 0)
 }
 
 @Preview
