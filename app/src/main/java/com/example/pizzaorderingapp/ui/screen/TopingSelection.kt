@@ -44,7 +44,7 @@ import com.example.pizzaorderingapp.dummyToppingList
 fun ToppingSelection(
     modifier: Modifier = Modifier,
     pizzaid: Int,
-    onConfirm: (Set<Topping>) -> Unit ={},
+    onConfirm: (Int,Set<Topping>) -> Unit,
 ) {
     val pizza = dummyPizzaList()[pizzaid]
     var SelectedTopping by remember { mutableStateOf(emptySet<Topping>()) }
@@ -93,7 +93,7 @@ fun ToppingSelection(
             }
         }
         FloatingActionButton(
-            onClick = { onConfirm },
+            onClick = { onConfirm(pizzaid,SelectedTopping) },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),
@@ -186,7 +186,7 @@ private fun ToppingsItemPreview() {
 @Preview
 @Composable
 private fun ToppingSelectionPreview() {
-    ToppingSelection(onConfirm = {
-
-    }, pizzaid = 0)
+    ToppingSelection( pizzaid = 0){
+        _,_->
+    }
 }

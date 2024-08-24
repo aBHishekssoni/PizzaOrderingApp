@@ -43,11 +43,26 @@ class MainActivity : ComponentActivity() {
                             ToppingSelection(modifier = Modifier.padding(innerPadding),
                                 pizzaid = it.arguments?.getInt("pizzaid")?:0
                                 ){
-//                                navController.navigate("Checkout")
+                                pizzaid,toppings->
+                                val pizzaprice= dummyPizzaList()[pizzaid].price
+                                var totaltoppingprice= 0.00
+//                                totaltoppingprice+= it.price
+                                toppings.forEach{
+                                    totaltoppingprice+= it.price
+                                }
+                                val totalAmt= pizzaprice+totaltoppingprice
+                                navController.navigate("Checkout/$totalAmt")
+
+
                             }
                         }
-                        composable("Checkout"){
-                            CheckoutScreen(modifier = Modifier.padding(innerPadding))
+                        composable("Checkout/{amt}",
+                            arguments = listOf(navArgument("amt"){
+                                type= NavType.FloatType
+                            })){
+                            val amt= it.arguments?.getFloat("amt")?:0f
+                            CheckoutScreen(modifier = Modifier.padding(innerPadding),
+                                totalAmt = amt)
                         }
                     }
                 }
@@ -59,9 +74,9 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 private fun ToppingSelectionPreview() {
-    ToppingSelection(onConfirm = {
-
-    }, pizzaid = 0)
+    ToppingSelection(pizzaid = 0){
+        _, _ ->
+    }
 }
 
 @Preview
@@ -74,5 +89,5 @@ private fun PizzaSelectionScreenPreview(){
 @Preview
 @Composable
 private fun CheckoutScreenPreview() {
-    CheckoutScreen()
+    CheckoutScreen(totalAmt = 0f)
 }
